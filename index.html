@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محاسبه‌گر اجاره بها و اجرت المثل</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&display=swap');
+        
+        * {
+            font-family: 'Vazirmatn', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+        
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            backdrop-filter: blur(10px);
+            background: rgba(255,255,255,0.95);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .header-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 20px 20px 0 0;
+            text-align: center;
+        }
+        
+        .header-section h1 {
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+        
+        .header-section p {
+            margin: 0;
+            opacity: 0.9;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            color: #4a5568;
+            margin-bottom: 8px;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 30px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #718096;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 30px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            background: #4a5568;
+            transform: translateY(-2px);
+        }
+        
+        .result-box {
+            background: linear-gradient(135deg, #f6f8fb 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .result-title {
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .result-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+        
+        .step-result {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-right: 4px solid #667eea;
+        }
+        
+        .form-check-input:checked {
+            background-color: #667eea;
+            border-color: #667eea;
+        }
+        
+        .calculator-section {
+            padding: 30px;
+        }
+        
+        .section-title {
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .disclaimer {
+            background: #fef5e7;
+            border: 2px solid #f39c12;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .disclaimer i {
+            color: #f39c12;
+            font-size: 1.2rem;
+        }
+        
+        .developer-info {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .loading-spinner.active {
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            .header-section h1 {
+                font-size: 1.5rem;
+            }
+            
+            .card {
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="card">
+            <div class="header-section">
+                <h1><i class="bi bi-calculator"></i> محاسبه‌گر اجاره بها و اجرت المثل</h1>
+                <p>محاسبه دقیق اجاره بها بر اساس شاخص تورم سالانه</p>
+            </div>
+            
+            <div class="calculator-section">
+                <!-- بخش اول: محاسبه‌گر اجاره بها -->
+                <div class="section-title">
+                    <i class="bi bi-house-door"></i> محاسبه‌گر اجاره بها
+                </div>
+                
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">تاریخ مبنا</label>
+                        <input type="text" class="form-control" id="baseDate" placeholder="مثال: 1400/01/01">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">مبلغ اجاره ماهانه در تاریخ مبنا (تومان)</label>
+                        <input type="number" class="form-control" id="baseRent" placeholder="مثال: 500000">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">تاریخ هدف</label>
+                        <input type="text" class="form-control" id="targetDate" placeholder="مثال: 1402/01/01">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">مبلغ اجاره ماهانه در تاریخ هدف (تومان)</label>
+                        <input type="number" class="form-control" id="targetRent" placeholder="مثال: 800000">
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <button class="btn btn-primary" onclick="calculateRent()">
+                            <i class="bi bi-calculator"></i> محاسبه
+                        </button>
+                        <button class="btn btn-secondary me-2" onclick="clearRentFields()">
+                            <i class="bi bi-arrow-clockwise"></i> پاک کردن فرم
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="rentResult" class="result-box" style="display: none;">
+                    <div class="result-title">نتیجه محاسبه</div>
+                    <div class="result-value" id="rentResultValue"></div>
+                </div>
+                
+                <!-- چک باکس مدت اجاره ایام تصرف -->
+                <div class="form-check form-switch mt-4">
+                    <input class="form-check-input" type="checkbox" id="occupancySwitch" onchange="toggleOccupancy()">
+                    <label class="form-check-label" for="occupancySwitch">
+                        <strong>محاسبه اجرت المثل ایام تصرف</strong>
+                    </label>
+                </div>
+                
+                <!-- بخش دوم: محاسبه‌گر اجرت المثل -->
+                <div id="occupancySection" style="display: none;" class="mt-4 fade-in">
+                    <div class="section-title">
+                        <i class="bi bi-calendar-check"></i> محاسبه‌گر اجرت المثل ایام تصرف
+                    </div>
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">تاریخ مبنا</label>
+                            <input type="text" class="form-control" id="occBaseDate" placeholder="مثال: 1400/01/01">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">اجاره ماهیانه در تاریخ مبنا (تومان)</label>
+                            <input type="number" class="form-control" id="occBaseRent" placeholder="مثال: 500000">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">تاریخ شروع تصرف</label>
+                            <input type="text" class="form-control" id="startDate" placeholder="مثال: 1401/06/01">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">تاریخ پایان تصرف</label>
+                            <input type="text" class="form-control" id="endDate" placeholder="مثال: 1402/05/30">
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <button class="btn btn-primary" onclick="calculateOccupancy()">
+                                <i class="bi bi-calculator"></i> محاسبه اجرت المثل
+                            </button>
+                            <button class="btn btn-secondary me-2" onclick="clearOccupancyFields()">
+                                <i class="bi bi-arrow-clockwise"></i> پاک کردن فرم
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="loading-spinner" id="loadingSpinner">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">در حال محاسبه...</span>
+                        </div>
+                    </div>
+                    
+                    <div id="occupancyResult" style="display: none;">
+                        <div class="result-box">
+                            <div class="result-title">مدت تصرف</div>
+                            <div class="result-value" id="durationValue"></div>
+                        </div>
+                        
+                        <div id="stepResults"></div>
+                        
+                        <div class="result-box">
+                            <div class="result-title">اجرت المثل نهایی</div>
+                            <div class="result-value" id="finalResult"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- پیام مهم -->
+                <div class="disclaimer">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    <strong>توجه مهم:</strong> این برنامه صرفاً نقش راهنما را دارد و جایگزین کارشناس رسمی دادگستری نخواهد بود. نتایج ارائه شده بر اساس داده‌های موجود و فرمول‌های استاندارد محاسبه شده است.
+                </div>
+                
+                <!-- اطلاعات توسعه دهنده -->
+                <div class="developer-info">
+                    <p class="mb-1"><i class="bi bi-code-slash"></i> توسعه دهنده: م.رضا پویا</p>
+                    <p class="mb-0 text-muted">© 1404 - تمام حقوق محفوظ است</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // داده‌های شاخص تورم اجاره مسکن
+        const rentIndexData = {
+            1362: 20.0,
+            1363: 16.7,
+            1364: 0.0,
+            1365: 14.3,
+            1366: 0.0,
+            1367: 12.5,
+            1368: 22.2,
+            1369: -64.5,
+            1370: 20.7,
+            1371: 21.8,
+            1372: 22.6,
+            1373: 21.7,
+            1374: 27.4,
+            1375: 34.8,
+            1376: 30.8,
+            1377: 19.5,
+            1378: 16.4,
+            1379: 18.6,
+            1380: 19.9,
+            1381: 20.0,
+            1382: 19.5,
+            1383: 18.4,
+            1384: 11.6,
+            1385: 13.7,
+            1386: 21.2,
+            1387: 28.7,
+            1388: 12.8,
+            1389: 6.0,
+            1390: 11.1,
+            1391: 12.5,
+            1392: 20.8,
+            1393: 15.6,
+            1394: 12.5,
+            1395: 9.8,
+            1396: 8.3,
+            1397: 13.4,
+            1398: 27.5,
+            1399: 31.8,
+            1400: 46.7,
+            1401: 53.1,
+            1402: 57.3,
+            1403: 75.0,
+            1404: 104.0
+        };
+        
+        // تبدیل تاریخ شمسی به میلادی
+        function jalaliToGregorian(jy, jm, jd) {
+            const g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+            let gy = jy + 621;
+            let gd, gm;
+            
+            if (jm > 6) {
+                jd += (jm - 7) * 31 + 186;
+            } else {
+                jd += (jm - 1) * 31;
+            }
+            
+            let days = gd = jd + Math.floor((gy * 1461) / 4) - Math.floor((gy * 1461 - 1) / 4) - 347;
+            
+            if (days > 365) {
+                days--;
+                gy++;
+            }
+            
+            if (days < 0) {
+                days += 365;
+                gy--;
+            }
+            
+            gm = (days < 186) ? Math.floor(days / 31) + 1 : Math.floor((days - 186) / 30) + 7;
+            gd = days - g_d_m[gm - 1] + 1;
+            
+            return new Date(gy, gm - 1, gd);
+        }
+        
+        // محاسبه فاصله بین دو تاریخ شمسی بر حسب ماه
+        function calculateMonthDifference(date1, date2) {
+            const d1 = date1.split('/');
+            const d2 = date2.split('/');
+            
+            const year1 = parseInt(d1[0]);
+            const month1 = parseInt(d1[1]);
+            const day1 = parseInt(d1[2]);
+            
+            const year2 = parseInt(d2[0]);
+            const month2 = parseInt(d2[1]);
+            const day2 = parseInt(d2[2]);
+            
+            let months = (year2 - year1) * 12 + (month2 - month1);
+            
+            // تعدیل بر اساس روز
+            if (day2 < day1) {
+                months--;
+            }
+            
+            return months;
+        }
+        
+        // محاسبه‌گر اجاره بها
+        function calculateRent() {
+            const baseDate = document.getElementById('baseDate').value;
+            const baseRent = parseFloat(document.getElementById('baseRent').value);
+            const targetDate = document.getElementById('targetDate').value;
+            const targetRent = parseFloat(document.getElementById('targetRent').value);
+            
+            let filledFields = 0;
+            let result = '';
+            
+            if (baseDate && baseRent && targetDate && !targetRent) {
+                // محاسبه اجاره هدف
+                const baseYear = parseInt(baseDate.split('/')[0]);
+                const targetYear = parseInt(targetDate.split('/')[0]);
+                
+                let accumulatedIndex = 1;
+                for (let year = baseYear; year < targetYear; year++) {
+                    if (rentIndexData[year]) {
+                        accumulatedIndex *= (1 + rentIndexData[year] / 100);
+                    }
+                }
+                
+                result = baseRent * accumulatedIndex;
+                document.getElementById('targetRent').value = Math.round(result);
+                
+            } else if (baseDate && !baseRent && targetDate && targetRent) {
+                // محاسبه اجاره مبنا
+                const baseYear = parseInt(baseDate.split('/')[0]);
+                const targetYear = parseInt(targetDate.split('/')[0]);
+                
+                let accumulatedIndex = 1;
+                for (let year = baseYear; year < targetYear; year++) {
+                    if (rentIndexData[year]) {
+                        accumulatedIndex *= (1 + rentIndexData[year] / 100);
+                    }
+                }
+                
+                result = targetRent / accumulatedIndex;
+                document.getElementById('baseRent').value = Math.round(result);
+                
+            } else if (!baseDate && baseRent && targetDate && targetRent) {
+                // محاسبه تاریخ مبنا (پیچیده‌تر)
+                result = 'محاسبه تاریخ مبنا با توجه به داده‌های موجود امکان‌پذیر نیست. لطفاً تاریخ مبنا را وارد کنید.';
+            } else if (baseDate && baseRent && !targetDate && targetRent) {
+                // محاسبه تاریخ هدف (پیچیده‌تر)
+                result = 'محاسبه تاریخ هدف با توجه به داده‌های موجود امکان‌پذیر نیست. لطفاً تاریخ هدف را وارد کنید.';
+            } else {
+                result = 'لطفاً دقیقاً سه فیلد را تکمیل کنید تا فیلد چهارم محاسبه شود.';
+            }
+            
+            // نمایش نتیجه
+            const resultDiv = document.getElementById('rentResult');
+            const resultValue = document.getElementById('rentResultValue');
+            
+            if (typeof result === 'number') {
+                resultValue.innerHTML = `<i class="bi bi-currency-exchange"></i> مبلغ محاسبه شده: ${result.toLocaleString('fa-IR')} تومان`;
+            } else {
+                resultValue.innerHTML = `<i class="bi bi-info-circle"></i> ${result}`;
+            }
+            
+            resultDiv.style.display = 'block';
+            resultDiv.classList.add('fade-in');
+        }
+        
+        // پاک کردن فرم اجاره
+        function clearRentFields() {
+            document.getElementById('baseDate').value = '';
+            document.getElementById('baseRent').value = '';
+            document.getElementById('targetDate').value = '';
+            document.getElementById('targetRent').value = '';
+            document.getElementById('rentResult').style.display = 'none';
+        }
+        
+        // نمایش/مخفی کردن بخش تصرف
+        function toggleOccupancy() {
+            const switchElement = document.getElementById('occupancySwitch');
+            const occupancySection = document.getElementById('occupancySection');
+            
+            if (switchElement.checked) {
+                occupancySection.style.display = 'block';
+                occupancySection.classList.add('fade-in');
+            } else {
+                occupancySection.style.display = 'none';
+            }
+        }
+        
+        // محاسبه‌گر اجرت المثل
+        function calculateOccupancy() {
+            const baseDate = document.getElementById('occBaseDate').value;
+            const baseRent = parseFloat(document.getElementById('occBaseRent').value);
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            
+            if (!baseDate || !baseRent || !startDate || !endDate) {
+                alert('لطفاً تمام فیلدها را تکمیل کنید');
+                return;
+            }
+            
+            // نمایش لودینگ
+            document.getElementById('loadingSpinner').classList.add('active');
+            
+            setTimeout(() => {
+                // محاسبه مدت تصرف
+                const duration = calculateMonthDifference(startDate, endDate);
+                
+                // استخراج سال‌ها
+                const startYear = parseInt(startDate.split('/')[0]);
+                const endYear = parseInt(endDate.split('/')[0]);
+                
+                let totalAmount = 0;
+                let stepResultsHTML = '';
+                
+                if (startYear === endYear) {
+                    // سال یکسان
+                    const index = rentIndexData[startYear] || 0;
+                    const amount = duration * baseRent * (1 + index / 100);
+                    totalAmount = amount;
+                    
+                    stepResultsHTML = `
+                        <div class="step-result">
+                            <strong>سال ${startYear}:</strong><br>
+                            مدت: ${duration} ماه | شاخص: ${index}% | مبلغ: ${amount.toLocaleString('fa-IR')} تومان
+                        </div>
+                    `;
+                } else {
+                    // سال‌های متفاوت
+                    let currentDate = startDate;
+                    let remainingMonths = duration;
+                    
+                    for (let year = startYear; year <= endYear; year++) {
+                        let yearStart, yearEnd;
+                        
+                        if (year === startYear) {
+                            yearStart = startDate;
+                            yearEnd = `${year}/12/29`;
+                        } else if (year === endYear) {
+                            yearStart = `${year}/01/01`;
+                            yearEnd = endDate;
+                        } else {
+                            yearStart = `${year}/01/01`;
+                            yearEnd = `${year}/12/29`;
+                        }
+                        
+                        const monthsInYear = calculateMonthDifference(yearStart, yearEnd) + 1;
+                        const index = rentIndexData[year] || 0;
+                        const amount = monthsInYear * baseRent * (1 + index / 100);
+                        
+                        totalAmount += amount;
+                        
+                        stepResultsHTML += `
+                            <div class="step-result">
+                                <strong>سال ${year}:</strong><br>
+                                دوره: ${yearStart} تا ${yearEnd}<br>
+                                مدت: ${monthsInYear} ماه | شاخص: ${index}% | مبلغ: ${amount.toLocaleString('fa-IR')} تومان
+                            </div>
+                        `;
+                    }
+                }
+                
+                // نمایش نتایج
+                document.getElementById('durationValue').innerHTML = `${duration} ماه`;
+                document.getElementById('stepResults').innerHTML = stepResultsHTML;
+                document.getElementById('finalResult').innerHTML = `${totalAmount.toLocaleString('fa-IR')} تومان`;
+                document.getElementById('occupancyResult').style.display = 'block';
+                document.getElementById('loadingSpinner').classList.remove('active');
+                
+                // انیمیشن fade-in
+                document.getElementById('occupancyResult').classList.add('fade-in');
+            }, 500);
+        }
+        
+        // پاک کردن فرم تصرف
+        function clearOccupancyFields() {
+            document.getElementById('occBaseDate').value = '';
+            document.getElementById('occBaseRent').value = '';
+            document.getElementById('startDate').value = '';
+            document.getElementById('endDate').value = '';
+            document.getElementById('occupancyResult').style.display = 'none';
+        }
+        
+        // اعتبارسنجی ورودی تاریخ
+        document.querySelectorAll('input[type="text"]').forEach(input => {
+            input.addEventListener('input', function(e) {
+                const value = e.target.value;
+                if (value && !value.match(/^\d{4}\/\d{2}\/\d{2}$/)) {
+                    e.target.setCustomValidity('لطفاً تاریخ را به صورت YYYY/MM/DD وارد کنید');
+                } else {
+                    e.target.setCustomValidity('');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
